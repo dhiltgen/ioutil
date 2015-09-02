@@ -56,7 +56,7 @@ func backend(dirname string, interval int) {
 		} else if strings.HasPrefix(line, "Device:") {
 			continue
 		} else if len(line) > 120 {
-			write(strings.TrimSpace(line[114:]))
+			write(strings.TrimSpace(line[strings.LastIndex(line, " "):]))
 		}
 	}
 }
@@ -151,12 +151,12 @@ func run(dirname string, interval int, color bool) {
 	percentString := strings.TrimSpace(string(data))
 	if !color {
 		fmt.Println(percentString + "%")
+		return
 	}
 	percent, err := strconv.ParseFloat(percentString, 64)
 	if err != nil {
-		fmt.Println(percentString + "%")
-	}
-	if percent > 50.0 {
+		fmt.Println(percentString + "%x")
+	} else if percent > 50.0 {
 		fmt.Printf("<fc=#FF0000>%0.2f%%</fc>\n", percent)
 	} else if percent > 25.0 {
 		fmt.Printf("<fc=#FFFF00>%0.2f%%</fc>\n", percent)
